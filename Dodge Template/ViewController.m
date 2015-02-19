@@ -24,8 +24,22 @@
 #define kGameStatePaused 4
 #define kGameStateOver 5
 
-NSInteger totalBombsDodged = 0;
 
+/*
+ Level 2: High score of 75 or above
+ Level 3: High score of 150 or above
+ Level 4: 5000 total bombs dodged
+ Level 5: High score of 225 or above
+ Level 6: 10000 total bombs dodged
+ */
+
+#define level2 75
+#define level3 150
+#define level4 5000
+#define level5 225
+#define level6 10000
+
+NSInteger totalBombsDodged = 0;
 
 @interface ViewController ()
 {
@@ -61,6 +75,10 @@ int lol;
         totalBombsDodged = [[NSUserDefaults standardUserDefaults] integerForKey:@"totalbombs"];
     }
     
+    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
+    
+    [_totalBombs setText:[NSString stringWithFormat:@"Total Bombs Dodged: %ld\nHigh Score: %ld", (long)totalBombsDodged, (long)highScore]];
+    
     //Load the image for the background and hero
     NSInteger backgroundHeroID = [[NSUserDefaults standardUserDefaults] integerForKey:@"background-hero"];
     
@@ -80,14 +98,28 @@ int lol;
             self.banner.hidden = YES;
         }
     }
-    _scoreLabel.font = [UIFont fontWithName:@"8BIT WONDER" size:35];
-    _scoreLabel.textColor = [UIColor whiteColor];
     
-    _finalScore.font = [UIFont fontWithName:@"8BIT WONDER" size:20];
-    _finalScore.textColor = [UIColor grayColor];
+    NSString *fontName = @"8BIT WONDER";
+    UIFont *font = [UIFont fontWithName:fontName size:35];
     
-    _bestScore.font = [UIFont fontWithName:@"8BIT WONDER" size:20];
-    _bestScore.textColor = [UIColor blackColor];
+    [_scoreLabel setFont:font];
+    [_scoreLabel setTextColor:[UIColor whiteColor]];
+    
+    font = [UIFont fontWithName:fontName size:20];
+    [_finalScore setFont:font];
+    [_finalScore setTextColor:[UIColor grayColor]];
+    
+    [_bestScore setFont:font];
+    [_bestScore setTextColor:[UIColor blackColor]];
+    
+    //Set font of character choose labels
+    font = [UIFont fontWithName:fontName size:12];
+    [_label1 setFont:font];
+    [_label2 setFont:font];
+    [_label3 setFont:font];
+    [_label4 setFont:font];
+    [_label5 setFont:font];
+    [_label6 setFont:font];
     
     [self initObject1];
     [self initObject2];
@@ -806,6 +838,7 @@ int lol;
     [_noAdsButton setHidden:true];
     [_restoreButton setHidden:true];
     [_characterSelectButton setHidden:true];
+    [_totalBombs setHidden:true];
     
     //Show all character set buttons, and back button
     [_character1Button setHidden:false];
@@ -821,6 +854,48 @@ int lol;
     [_label4 setHidden:false];
     [_label5 setHidden:false];
     [_label6 setHidden:false];
+    
+    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
+    
+    /*
+     Level 2: High score of 75 or above
+     Level 3: High score of 150 or above
+     Level 4: 5000 total bombs dodged
+     Level 5: High score of 225 or above
+     Level 6: 10000 total bombs dodged
+     */
+    
+    if (highScore >= level2) {
+        [_character2Button setEnabled:true];
+    } else {
+        [_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
+    }
+    
+    if (highScore >= level3) {
+        [_character3Button setEnabled:true];
+    } else {
+        [_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
+    }
+    
+    if (totalBombsDodged >= level4) {
+        [_character4Button setEnabled:true];
+    } else {
+        [_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
+    }
+    
+    if (highScore >= level5) {
+        [_character5Button setEnabled:true];
+    } else {
+        [_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
+    }
+    
+    if (totalBombsDodged >= level6) {
+        [_character6Button setEnabled:true];
+    } else {
+        [_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
+    }
+    
+
     
     [_backToMainMenuButton setHidden:false];
 }
@@ -845,6 +920,7 @@ int lol;
     [_noAdsButton setHidden:false];
     [_restoreButton setHidden:false];
     [_characterSelectButton setHidden:false];
+    [_totalBombs setHidden:false];
     
     //Hide all character set buttons, and back button
     [_character1Button setHidden:true];

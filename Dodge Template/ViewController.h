@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *background;
 
 //Stuff
+@property (weak, nonatomic) IBOutlet UILabel *totalBombs;
 @property (weak, nonatomic) IBOutlet UIImageView *object1;
 @property (weak, nonatomic) IBOutlet UIImageView *object2;
 @property (weak, nonatomic) IBOutlet UIImageView *object3;
