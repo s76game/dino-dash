@@ -3,7 +3,7 @@
 //  Dodge Template
 //
 //  Created by Mario on 20/05/14.
-//  Copyright (c) 2014 Company name. All rights reserved.
+//  Copyright (c) 2014 Baboolagoon. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

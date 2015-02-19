@@ -2,7 +2,7 @@
 //  AppDelegate.m
 //  Dodge Template
 //
-//  Copyright (c) 2014 Company name. All rights reserved.
+//  Copyright (c) 2014 Baboolagoon. All rights reserved.
 //
 
 
