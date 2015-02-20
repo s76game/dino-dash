@@ -41,6 +41,8 @@
 
 NSInteger totalBombsDodged = 0;
 
+int gameCount = 0;
+
 @interface ViewController ()
 {
     BOOL isGameOver; //
@@ -58,12 +60,11 @@ int difficulty;
 SystemSoundID mySound;
 int lol;
 
--(BOOL)prefersStatusBarHidden{
+-(BOOL)prefersStatusBarHidden {
     return YES;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     isGameOver = NO;
@@ -82,8 +83,13 @@ int lol;
     //Load the image for the background and hero
     NSInteger backgroundHeroID = [[NSUserDefaults standardUserDefaults] integerForKey:@"background-hero"];
     
-    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", backgroundHeroID];
-    NSString *backgroundImage = [NSString stringWithFormat:@"background%ld.png", backgroundHeroID];
+    if (backgroundHeroID == nil) {
+        [[NSUserDefaults standardUserDefaults] setInteger:1 forKey:@"background-hero"];
+        backgroundHeroID = 1;
+    }
+    
+    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", (long)backgroundHeroID];
+    NSString *backgroundImage = [NSString stringWithFormat:@"background%ld.png", (long)backgroundHeroID];
     
     [_hero setImage:[UIImage imageNamed:heroImage]];
     [_background setImage:[UIImage imageNamed:backgroundImage]];
@@ -91,13 +97,19 @@ int lol;
     _connecting.hidden = YES;
     [[GameCenterManager sharedManager] setDelegate:self];
     self.banner.delegate = self;
-    //show ads?
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
+    //Check to see if show ads is set
+    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] == nil) {
+        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"noads"];
+    }
+    
+    /*
     if([defaults objectForKey:@"noads"] != nil){
         if([[defaults objectForKey:@"noads"]isEqualToString:@"YES"]){
             self.banner.hidden = YES;
         }
     }
+    */
     
     NSString *fontName = @"8BIT WONDER";
     UIFont *font = [UIFont fontWithName:fontName size:35];
@@ -111,6 +123,11 @@ int lol;
     
     [_bestScore setFont:font];
     [_bestScore setTextColor:[UIColor blackColor]];
+    
+    font = [UIFont fontWithName:fontName size:13];
+    [_totalBombs setFont:font];
+    
+    [[_characterSelectButton titleLabel] setFont:font];
     
     //Set font of character choose labels
     font = [UIFont fontWithName:fontName size:12];
@@ -230,7 +247,6 @@ int lol;
         else{
             done = CGRectMake(16,600,280,286);
         }
-        
     }
     
     
@@ -248,7 +264,7 @@ int lol;
     
     
     NSInteger heroImageID = [[NSUserDefaults standardUserDefaults] integerForKey:@"background-hero"];
-    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", heroImageID];
+    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", (long)heroImageID];
     
     [_hero setImage:[UIImage imageNamed:heroImage]];
 }
@@ -422,7 +438,7 @@ int lol;
         _hero.image = [UIImage imageNamed:@"hero.png"];
     } */
     NSInteger heroImageID = [[NSUserDefaults standardUserDefaults] integerForKey:@"background-hero"];
-    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", heroImageID];
+    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", (long)heroImageID];
     
     [_hero setImage:[UIImage imageNamed:heroImage]];
     [_hero setCenter:xLocation];
@@ -500,9 +516,19 @@ int lol;
     */
     
     //Show an ad from ChartBoost, with the method showAds in AppDelegate
-    [[[UIApplication sharedApplication] delegate] performSelector:@selector(showAds)];
 
+    gameCount++;
+    if (gameCount % 2 == 0) {
+        //Every three games, show an ad
+        if([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] != nil){
+            if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"noads"]isEqualToString:@"YES"]){
+                [[[UIApplication sharedApplication] delegate] performSelector:@selector(showAds)];
+            }
+        }
+        gameCount = 0;
+    }
     
+    /*
     _gameCount++;
     if (_gameCount % 5 == 0)
     {
@@ -513,6 +539,7 @@ int lol;
         
         //[self showApplovinAd];
     }
+    */
     
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
 
@@ -593,7 +620,6 @@ int lol;
                      completion:^(BOOL finished){
                          
                      }];
-    
 }
 
 #pragma mark - INIT OBJECTS
@@ -938,6 +964,63 @@ int lol;
     [_label6 setHidden:true];
     
     [_backToMainMenuButton setHidden:true];
+}
+
+-(IBAction)backToMainMenuFromLoss:(id)sender {
+    NSLog(@"Back to main menu");
+    
+    CGSize screenSize = [[UIScreen mainScreen] bounds].size;
+    
+    //MOVES IT DOWN
+    CGRect menu;
+    
+    if(UI_USER_INTERFACE_IDIOM() == UI_USER_INTERFACE_IDIOM()){
+        if(screenSize.height >480.0f){
+            menu= CGRectMake(17,700,287,270);
+        }
+        else{
+            menu= CGRectMake(17,600,287,270);
+        }
+        
+    }
+    
+    [UIView animateWithDuration: 1.0f
+                     animations:^{
+                         _gameoverView.frame = menu;
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+    
+    //MOVES IT UP
+    
+    if(UI_USER_INTERFACE_IDIOM() == UI_USER_INTERFACE_IDIOM()){
+        if(screenSize.height >480.0f){
+            menu = CGRectMake(17,88,290,270);
+            
+        }
+        else{
+            menu = CGRectMake(17,57,290,270);
+        }
+    }
+    
+    
+    [UIView animateWithDuration: 1.0f
+                     animations:^{
+                         _titleView.frame = menu;
+                     }
+                     completion:^(BOOL finished){
+                         
+                     }];
+    
+    isGameOver = false;
+    
+    gameState = kGameStateMenu;
+    
+    NSInteger heroImageID = [[NSUserDefaults standardUserDefaults] integerForKey:@"background-hero"];
+    NSString *heroImage = [NSString stringWithFormat:@"hero%ld.png", (long)heroImageID];
+    
+    [_hero setImage:[UIImage imageNamed:heroImage]];
 }
 
 @end
