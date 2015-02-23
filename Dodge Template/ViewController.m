@@ -15,7 +15,7 @@
 
 #define kLeaderboardIdentifier @"com.romit.godzilladodger.score"
 
-#define kIDRateApp @"https://itunes.apple.com/us/app/can-you-escape-doom-godzilla/id884656945?ls=1&mt=8"
+#define kIDRateApp @"http://baboolagoon.com"
 
 
 #define kGameStateMenu 1
@@ -98,11 +98,6 @@ int lol;
     [[GameCenterManager sharedManager] setDelegate:self];
     self.banner.delegate = self;
     
-    //Check to see if show ads is set
-    if ([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] == nil) {
-        [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"noads"];
-    }
-    
     /*
     if([defaults objectForKey:@"noads"] != nil){
         if([[defaults objectForKey:@"noads"]isEqualToString:@"YES"]){
@@ -124,13 +119,13 @@ int lol;
     [_bestScore setFont:font];
     [_bestScore setTextColor:[UIColor blackColor]];
     
-    font = [UIFont fontWithName:fontName size:13];
+    font = [UIFont fontWithName:fontName size:10];
     [_totalBombs setFont:font];
     
     [[_characterSelectButton titleLabel] setFont:font];
     
     //Set font of character choose labels
-    font = [UIFont fontWithName:fontName size:12];
+    font = [UIFont fontWithName:fontName size:10];
     [_label1 setFont:font];
     [_label2 setFont:font];
     [_label3 setFont:font];
@@ -705,24 +700,26 @@ int lol;
     [alert show];
     */
 
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if([defaults objectForKey:@"noads"] != nil){
-        if([[defaults objectForKey:@"noads"]isEqualToString:@"YES"]){
+    if([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] != nil){
+        NSLog(@"Not nil");
+        if([[[NSUserDefaults standardUserDefaults] objectForKey:@"noads"]isEqualToString:@"YES"]){
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops."
                                                             message:@"You've already bought this."
                                                            delegate:self
                                                   cancelButtonTitle:@"OK"
                                                   otherButtonTitles:nil];
             [alert show];
+        } else {
+            NSLog(@"Is not equal to string");
         }
-    }else{
+    } else {
+        NSLog(@"Is nil");
         if([SKPaymentQueue canMakePayments]){
             NSLog(@"User can make payments");
             SKProductsRequest *productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:[NSSet setWithObject:kRemoveAdsProductIdentifier]];
             productsRequest.delegate = self;
             [productsRequest start];
-            _connecting.hidden = NO;
+            [_connecting setHidden:NO];
         }else{
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Oops."
                                                             message:@"I don't think you are allowed to make in-app purchases."
@@ -894,31 +891,31 @@ int lol;
     if (highScore >= level2) {
         [_character2Button setEnabled:true];
     } else {
-        [_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
+        //[_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
     }
     
     if (highScore >= level3) {
         [_character3Button setEnabled:true];
     } else {
-        [_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
+        //[_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
     }
     
     if (totalBombsDodged >= level4) {
         [_character4Button setEnabled:true];
     } else {
-        [_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
+        //[_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
     }
     
     if (highScore >= level5) {
         [_character5Button setEnabled:true];
     } else {
-        [_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
+        //[_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
     }
     
     if (totalBombsDodged >= level6) {
         [_character6Button setEnabled:true];
     } else {
-        [_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
+        //[_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
     }
     
 
@@ -968,6 +965,10 @@ int lol;
 
 -(IBAction)backToMainMenuFromLoss:(id)sender {
     NSLog(@"Back to main menu");
+    
+    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
+    
+    [_totalBombs setText:[NSString stringWithFormat:@"Total Bombs Dodged: %ld\nHigh Score: %ld", (long)totalBombsDodged, (long)highScore]];
     
     CGSize screenSize = [[UIScreen mainScreen] bounds].size;
     
