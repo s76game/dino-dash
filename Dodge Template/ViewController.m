@@ -25,12 +25,12 @@
 #define kGameStateOver 5
 
 
-/*
- Level 2: High score of 75 or above
- Level 3: High score of 150 or above
- Level 4: 5000 total bombs dodged
- Level 5: High score of 225 or above
- Level 6: 10000 total bombs dodged
+/**
+ * Level 2: High score of 75 or above
+ * Level 3: High score of 150 or above
+ * Level 4: 5000 total bombs dodged
+ * Level 5: High score of 225 or above
+ * Level 6: 10000 total bombs dodged
  */
 
 #define level2 75
@@ -514,8 +514,10 @@ int lol;
 
     gameCount++;
     if (gameCount % 2 == 0) {
-        //Every three games, show an ad
-        if([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] != nil){
+        //Every two games, show an ad
+        if ([[NSUserDefaults standardUserDefaults] objectForKey:@"noads"] == nil) {
+            [[[UIApplication sharedApplication] delegate] performSelector:@selector(showAds)];
+        } else {
             if(![[[NSUserDefaults standardUserDefaults] objectForKey:@"noads"]isEqualToString:@"YES"]){
                 [[[UIApplication sharedApplication] delegate] performSelector:@selector(showAds)];
             }
