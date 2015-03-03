@@ -893,31 +893,31 @@ int lol;
     if (highScore >= level2) {
         [_character2Button setEnabled:true];
     } else {
-        //[_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
+        [_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
     }
     
     if (highScore >= level3) {
         [_character3Button setEnabled:true];
     } else {
-        //[_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
+        [_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
     }
     
     if (totalBombsDodged >= level4) {
         [_character4Button setEnabled:true];
     } else {
-        //[_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
+        [_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
     }
     
     if (highScore >= level5) {
         [_character5Button setEnabled:true];
     } else {
-        //[_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
+        [_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
     }
     
     if (totalBombsDodged >= level6) {
         [_character6Button setEnabled:true];
     } else {
-        //[_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
+        [_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
     }
     
 
