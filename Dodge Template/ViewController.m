@@ -39,7 +39,7 @@
 #define level5 225
 #define level6 10000
 
-NSInteger totalBombsDodged = 0;
+NSInteger totalBombsDodged = 0, highScore = 0;
 
 int gameCount = 0;
 
@@ -76,7 +76,7 @@ int lol;
         totalBombsDodged = [[NSUserDefaults standardUserDefaults] integerForKey:@"totalbombs"];
     }
     
-    NSInteger highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
+    highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
     
     [_totalBombs setText:[NSString stringWithFormat:@"Total Bombs Dodged: %ld\nHigh Score: %ld", (long)totalBombsDodged, (long)highScore]];
     
@@ -486,7 +486,6 @@ int lol;
     
     totalBombsDodged += score;
     [[NSUserDefaults standardUserDefaults] setInteger:totalBombsDodged forKey:@"totalbombs"];
-    NSLog(@"%ld", (long)totalBombsDodged);
     
     NSString *path  = [[NSBundle mainBundle] pathForResource:@"deadSound" ofType:@"wav"];
     NSURL *pathURL = [NSURL fileURLWithPath : path];
@@ -593,6 +592,9 @@ int lol;
         [defaults setObject:_finalScore.text forKey:@"highscore"];
         [defaults synchronize];
     }
+    
+    highScore = [[NSUserDefaults standardUserDefaults] integerForKey:@"highscore"];
+    NSLog(@"%ld", (long)highScore);
     
     _bestScore.text = [defaults objectForKey:@"highscore"];
     
@@ -892,30 +894,35 @@ int lol;
     
     if (highScore >= level2) {
         [_character2Button setEnabled:true];
+        [_label2 setText:@"Ruby"];
     } else {
         [_label2 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level2]];
     }
     
     if (highScore >= level3) {
         [_character3Button setEnabled:true];
+        [_label3 setText:@"Tanzanite"];
     } else {
         [_label3 setText:[NSString stringWithFormat:@"High Score: %ld to unlock!", (long)level3]];
     }
     
     if (totalBombsDodged >= level4) {
         [_character4Button setEnabled:true];
+        [_label4 setText:@"Lava"];
     } else {
         [_label4 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level4]];
     }
     
     if (highScore >= level5) {
         [_character5Button setEnabled:true];
+        [_label5 setText:@"Tianite"];
     } else {
         [_label5 setText:[NSString stringWithFormat:@"High Score: %ld to unlock", (long)level5]];
     }
     
     if (totalBombsDodged >= level6) {
         [_character6Button setEnabled:true];
+        [_label6 setText:@"Goldie"];
     } else {
         [_label6 setText:[NSString stringWithFormat:@"Dodge: %ld to unlock!", (long)level6]];
     }
